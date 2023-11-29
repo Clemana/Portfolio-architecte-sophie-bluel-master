@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
   const gallery = document.querySelector('.gallery');
-  let allWorks = []; // 
+  let allWorks = [];
 
   async function fetchData() {
     try {
@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
         categoriesResponse.json()
       ]);
 
-      allWorks = worksData; 
+      allWorks = worksData;
       integrerProjets(allWorks, gallery);
       displayCategories(categoriesData);
     } catch (error) {
@@ -47,12 +47,17 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function displayCategories(categories) {
+    const portfolioSection = document.getElementById('portfolio');
+
+    // Créer un conteneur pour les boutons de filtre
     const filtersContainer = document.createElement('div');
     filtersContainer.id = 'filters-container';
 
+    // Ajouter les boutons de filtre au conteneur
     categories.forEach(category => {
       const filterButton = document.createElement('button');
       filterButton.textContent = category.name;
+      filterButton.classList.add('filter-button'); // Ajouter une classe pour le style
       filterButton.addEventListener('click', () => {
         filterWorksByCategory(category.id);
       });
@@ -60,9 +65,8 @@ document.addEventListener('DOMContentLoaded', () => {
       filtersContainer.appendChild(filterButton);
     });
 
-    
-    const portfolioSection = document.getElementById('portfolio');
-    portfolioSection.insertBefore(filtersContainer, portfolioSection.firstChild);
+    // Insérer le conteneur des boutons de filtre juste après le titre "Projets"
+    portfolioSection.querySelector('h2').insertAdjacentElement('afterend', filtersContainer);
   }
 
   function filterWorksByCategory(categoryId) {
@@ -70,7 +74,5 @@ document.addEventListener('DOMContentLoaded', () => {
     integrerProjets(filteredWorks, gallery);
   }
 
-  
   fetchData();
 });
-
