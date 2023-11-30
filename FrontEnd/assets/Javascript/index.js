@@ -53,6 +53,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const filtersContainer = document.createElement('div');
     filtersContainer.id = 'filters-container';
 
+    // Ajouter le bouton "Tous les travaux" au conteneur
+    const allWorksButton = document.createElement('button');
+    allWorksButton.textContent = 'Tous les travaux';
+    allWorksButton.classList.add('filter-button');
+    allWorksButton.addEventListener('click', () => {
+      integrerProjets(allWorks, gallery);
+    });
+
+    filtersContainer.appendChild(allWorksButton);
+
     // Ajouter les boutons de filtre au conteneur
     categories.forEach(category => {
       const filterButton = document.createElement('button');
