@@ -238,7 +238,7 @@ footer nav ul {
 	padding: 10px;
   }
   
-  button {
+  .login-container button {
 	width: 30%;
 	height: 51px;
 	background-color: #1D6154;
@@ -253,7 +253,7 @@ footer nav ul {
   .login-container{
 	margin: 110px;
   }
-  /* Ajout de styles pour le lien "Mot de passe oublié" */
+ 
   .login-container p {
 	margin-top: 10px;
 	text-align: center;

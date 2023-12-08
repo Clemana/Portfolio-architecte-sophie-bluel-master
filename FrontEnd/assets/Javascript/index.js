@@ -49,11 +49,11 @@ document.addEventListener('DOMContentLoaded', () => {
   function displayCategories(categories) {
     const portfolioSection = document.getElementById('portfolio');
 
-    // Créer un conteneur pour les boutons de filtre
+    
     const filtersContainer = document.createElement('div');
     filtersContainer.id = 'filters-container';
 
-    // Ajouter le bouton "Tous les travaux" au conteneur
+    
     const allWorksButton = document.createElement('button');
     allWorksButton.textContent = 'Tous les travaux';
     allWorksButton.classList.add('filter-button');
@@ -63,11 +63,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     filtersContainer.appendChild(allWorksButton);
 
-    // Ajouter les boutons de filtre au conteneur
+    
     categories.forEach(category => {
       const filterButton = document.createElement('button');
       filterButton.textContent = category.name;
-      filterButton.classList.add('filter-button'); // Ajouter une classe pour le style
+      filterButton.classList.add('filter-button'); 
       filterButton.addEventListener('click', () => {
         filterWorksByCategory(category.id);
       });
@@ -75,7 +75,7 @@ document.addEventListener('DOMContentLoaded', () => {
       filtersContainer.appendChild(filterButton);
     });
 
-    // Insérer le conteneur des boutons de filtre juste après le titre "Projets"
+    
     portfolioSection.querySelector('h2').insertAdjacentElement('afterend', filtersContainer);
   }
 
