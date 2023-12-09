@@ -2,8 +2,6 @@ document.addEventListener("DOMContentLoaded", function () {
     
     const emailInput = document.querySelector("#username");
     const passwordInput = document.querySelector("#password");
-
-    
     const formInfos = document.querySelector("#loginForm");
 
     formInfos.addEventListener("submit", async function (event) {
@@ -26,7 +24,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
             const authentificationResponse = await authentificationInfos.json();
 
-            
             sessionStorage.setItem("authentificationToken", authentificationResponse.token);
             sessionStorage.setItem("userId", authentificationResponse.userId);
             sessionStorage.setItem("authentificationState", true);
