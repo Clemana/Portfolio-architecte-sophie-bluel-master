@@ -1,8 +1,9 @@
 document.addEventListener("DOMContentLoaded", function () {
-    
+
     const emailInput = document.querySelector("#username");
     const passwordInput = document.querySelector("#password");
     const formInfos = document.querySelector("#loginForm");
+    const errorNotification = document.querySelector(".error-notification");
 
     formInfos.addEventListener("submit", async function (event) {
         event.preventDefault();
@@ -26,16 +27,20 @@ document.addEventListener("DOMContentLoaded", function () {
 
             sessionStorage.setItem("authentificationToken", authentificationResponse.token);
             sessionStorage.setItem("userId", authentificationResponse.userId);
+            
+            // Marquer la session comme administrateur
+            sessionStorage.setItem("isAdmin", authentificationResponse.role === "admin");
+
             sessionStorage.setItem("authentificationState", true);
 
-           
+            // Rediriger vers la page d'accueil
             window.location.replace("index.html");
         } catch (error) {
             console.error(error);
             sessionStorage.setItem("authentificationState", false);
 
-            const wrongUserNotification = document.querySelector(".wrong-user-notification");
-            wrongUserNotification.innerText = "Nom d'utilisateur ou mot de passe incorrect.";
+            // Afficher le message d'erreur sur l'écran
+            errorNotification.innerText = "Nom d'utilisateur ou mot de passe incorrect.";
         }
     });
 });
