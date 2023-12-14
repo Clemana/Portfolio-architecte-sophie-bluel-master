@@ -40,7 +40,7 @@ document.addEventListener("DOMContentLoaded", function () {
             sessionStorage.setItem("authentificationState", false);
 
             // Afficher le message d'erreur sur l'écran
-            errorNotification.innerText = "Nom d'utilisateur ou mot de passe incorrect.";
+            errorNotification.innerText = "Nom d'utilisateur ou mot de passe incorrect";
         }
     });
 });

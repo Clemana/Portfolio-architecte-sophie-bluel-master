@@ -35,7 +35,14 @@
 		</article>
 	</section>
 	<section id="portfolio">
-		<h2>Mes Projets</h2>
+		<h2>Mes Projets <button id="openModalBtn">Modifier</button></h2>
+		<div id="myModal" class="modal">
+			<div class="modal-content">
+				<span class="close" id="closeModalBtn">&times;</span>
+				<h2>Contenu de la Modale</h2>
+				<p>Ceci est le contenu de la modale.</p>
+			</div>
+		</div>
 		<div class="gallery">
 			<figure>
 				<img src="assets/images/abajour-tahina.png" alt="Abajour Tahina">
@@ -106,6 +113,6 @@
 	</nav>
 </footer>
 <script src="./assets/Javascript/index.js"></script>
-
+<script src="./assets/Javascript/modale.js"></script>
 </body>
 </html>
