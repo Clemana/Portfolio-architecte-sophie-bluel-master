@@ -1,5 +1,4 @@
 document.addEventListener("DOMContentLoaded", function () {
-
     const emailInput = document.querySelector("#username");
     const passwordInput = document.querySelector("#password");
     const formInfos = document.querySelector("#loginForm");
@@ -13,34 +12,32 @@ document.addEventListener("DOMContentLoaded", function () {
         const userInfos = { email, password };
 
         try {
-            const authentificationInfos = await fetch("http://localhost:5678/api/users/login", {
+            const response = await fetch("http://localhost:5678/api/users/login", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(userInfos),
             });
 
-            if (!authentificationInfos.ok) {
+            if (!response.ok) {
                 throw new Error("Erreur d'authentification");
             }
 
-            const authentificationResponse = await authentificationInfos.json();
+            const authResponse = await response.json();
 
-            sessionStorage.setItem("authentificationToken", authentificationResponse.token);
-            sessionStorage.setItem("userId", authentificationResponse.userId);
-            
-            // Marquer la session comme administrateur
-            sessionStorage.setItem("isAdmin", authentificationResponse.role === "admin");
+            // Stocker uniquement le jeton d'authentification dans localStorage
+            localStorage.setItem("authToken", authResponse.token);
 
-            sessionStorage.setItem("authentificationState", true);
-
-            // Rediriger vers la page d'accueil
+            // Redirection vers la page d'accueil
             window.location.replace("index.html");
         } catch (error) {
             console.error(error);
-            sessionStorage.setItem("authentificationState", false);
 
-            // Afficher le message d'erreur sur l'écran
+            // En cas d'erreur, effacer le jeton d'authentification
+            localStorage.removeItem("authToken");
+
+            // Affichage du message d'erreur sur l'écran
             errorNotification.innerText = "Nom d'utilisateur ou mot de passe incorrect";
         }
     });
 });
+

@@ -310,3 +310,10 @@ footer nav ul {
     cursor: pointer;
 }
 
+#openModalBtn {
+    all: unset;
+	font-family: 'Work Sans';
+	color: black;
+	font-size: 14px;
+	font-weight: 400;
+}

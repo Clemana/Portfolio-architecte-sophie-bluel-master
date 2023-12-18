@@ -1,8 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
   const gallery = document.querySelector('.gallery');
   let allWorks = [];
-  let isAdmin = sessionStorage.getItem("isAdmin") === "true";
-
+  
   async function fetchData() {
       try {
           const [worksResponse, categoriesResponse] = await Promise.all([
@@ -22,6 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
           allWorks = worksData;
           integrerProjets(allWorks, gallery);
           displayCategories(categoriesData);
+          
       } catch (error) {
           console.error('Erreur lors de la récupération des données:', error);
       }
@@ -75,14 +75,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
           filtersContainer.appendChild(filterButton);
       });
+      
 
       portfolioSection.querySelector('h2').insertAdjacentElement('afterend', filtersContainer);
   }
-
+  
   function filterWorksByCategory(categoryId) {
       const filteredWorks = allWorks.filter(work => work.categoryId === categoryId);
       integrerProjets(filteredWorks, gallery);
   }
-  
+
   fetchData();
 });
