@@ -320,11 +320,29 @@ footer nav ul {
 }
 
 
-.thumbnail {
-    max-width: 100px; 
-    max-height: 100px; 
-    margin: 5px; 
+.thumbnail-container {
+    position: relative;
+    display: inline-block;
 }
+
+.thumbnail {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+.delete-button {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: black; 
+    border: none;
+    cursor: pointer;
+    color: white; 
+    padding: 5px;
+}
+
+
 
 
 .modal-gallery {
