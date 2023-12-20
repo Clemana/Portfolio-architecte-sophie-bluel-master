@@ -316,6 +316,7 @@ footer nav ul {
 	color: black;
 	font-size: 14px;
 	font-weight: 400;
+	margin-left: 20px;
 }
 
 
@@ -338,4 +339,115 @@ footer nav ul {
     flex-basis: calc(20% - 10px); 
 }
 
+.modal-addPhoto {
+	font-family: 'Syne';
+	font-weight: 700;
+	color: white;
+	background-color: #1D6154;
+	margin : 2em auto ;
+	width: 180px;
+	text-align: center;
+	border-radius: 60px ;
+	padding: 10px;
+	cursor: pointer;
+}
 
+.modal-hr {
+	width: 420px;
+	height: 0px;
+	border: 1px solid #B3B3B3;
+	left: 510px;
+	top: 1229px;
+}
+
+.modal-two {
+    display: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 20px;
+    background-color: #fff;
+    text-align: center;
+}
+
+.modal-two .close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.modal-two .return-modal-one {
+    position: absolute;
+    top: 10px;
+    left: 10px; 
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.modal-two-imgcontainer {
+	background-color: #E8F1F6;
+    display: flex;
+	flex-direction: column;
+    border-radius: 3px;
+    padding: 10px; 
+    box-sizing: border-box; 
+	height: 170px;
+}
+
+.modal-two-form input[type="file"] {
+	display: none;
+}
+
+.modal-two-icon {
+	color: #B9C5CC;
+	font-size: 80px;
+}
+
+.modal-two-textAddPhoto {
+	color: #306685;
+	font-family: 'Work Sans';
+	font-weight: 500;
+	font-size: 14px;
+	line-height: 16px;
+	cursor: pointer;
+	background: #CBD6DC;
+	border: none;
+	border-radius: 50px;
+	max-height: 36px;
+	max-width: 173px;
+	padding: 10px 23px;
+	text-align: center;
+}
+
+.modal-two-desc {
+	color: #444444;
+	font-family: 'Work Sans';
+	font-weight: 400;
+	font-size: 10px;
+	margin-bottom: 19px;
+}
+
+.modal-two-form {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	justify-content: center;
+	max-width: 420px;
+	width: 95%;
+}
+.modal-two-form input {	
+	height: 51px;
+	font-size: 1.2em;
+	border: none;
+	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
+}
+.modal-two-form select {
+	background: white;
+	border: none;
+	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
+	color: #6C6C6C;
+	height: 51px;
+}
