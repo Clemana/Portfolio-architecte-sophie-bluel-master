@@ -1,11 +1,35 @@
 document.addEventListener('DOMContentLoaded', async function () {
     const openModalBtn = document.getElementById('openModalBtn');
     const closeModalBtn = document.getElementById('closeModalBtn');
+    const closeModalTwoBtn = document.getElementById('closeModalTwoBtn');
     const modal = document.getElementById('myModal');
     const modalContent = document.querySelector('.modal-content');
     const modalTwo = document.querySelector('.modal-two');
     const modalGallery = document.querySelector('.modal-gallery');
-    const addPhotoBtn = document.querySelector('.modal-content button');
+    const addPhotoBtn = document.querySelector('.modal-content .modal-addPhoto');
+    const returnModalOne = document.querySelector('.modal-two .return-modal-one');
+    const addPhotoInput = document.getElementById('addPhoto');
+    const photoCategoriesSelect = document.getElementById('photoCategories');
+
+    // Récupération des catégories depuis l'API
+    fetch("http://localhost:5678/api/categories")
+        .then(response => response.json())
+        .then(dataCategories => {
+            // On récupère le select pour ajouter les catégories
+            const select = document.getElementById("photoCategories");
+
+            // Catégorie vide pour le visuel
+            const emptyOption = document.createElement('option');
+            select.appendChild(emptyOption);
+
+            // Récupération dynamique des catégories présentes sur API
+            dataCategories.forEach((category) => {
+                const option = document.createElement('option');
+                option.innerText = category.name;
+                option.value = category.id;
+                select.appendChild(option);
+            });
+        });
 
     openModalBtn.addEventListener('click', async function () {
         try {
@@ -18,8 +42,11 @@ document.addEventListener('DOMContentLoaded', async function () {
     });
 
     closeModalBtn.addEventListener('click', hideModal);
+    closeModalTwoBtn.addEventListener('click', hideModal);
     window.addEventListener('click', closeOnOverlayClick);
     addPhotoBtn.addEventListener('click', switchToModalTwo);
+    returnModalOne.addEventListener('click', showModalContent);
+    addPhotoInput.addEventListener('change', handlePhotoChange);
 
     function updateModalContent(works) {
         modalGallery.innerHTML = '';
@@ -43,7 +70,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         thumbnail.alt = work.title;
 
         const deleteButton = createDeleteButton(work.id);
-        
+
         thumbnailContainer.appendChild(thumbnail);
         thumbnailContainer.appendChild(deleteButton);
 
@@ -57,11 +84,9 @@ document.addEventListener('DOMContentLoaded', async function () {
         deleteButton.classList.add('delete-button');
         deleteButton.innerHTML = '<i class="fa-solid fa-trash-can"></i>';
 
-        // Ajoutez un écouteur d'événements pour le bouton de suppression
         deleteButton.addEventListener('click', async () => {
             if (confirm("Voulez-vous supprimer le projet ?")) {
                 await deleteProject(workId);
-                // Mettez à jour la galerie après la suppression
                 const updatedWorks = await fetchWorksFromApi();
                 updateModalContent(updatedWorks);
             }
@@ -139,8 +164,33 @@ document.addEventListener('DOMContentLoaded', async function () {
         modalContent.style.display = 'none';
         modalTwo.style.display = 'block';
     }
+
+    function handlePhotoChange() {
+        const previewContainer = document.querySelector('.modal-two-imgcontainer');
+        const previewImage = document.createElement('img');
+
+        const file = addPhotoInput.files[0];
+
+        if (file) {
+            const reader = new FileReader();
+
+            reader.onload = function (e) {
+                previewImage.src = e.target.result;
+                previewImage.alt = file.name;
+
+                // Efface le contenu existant avant d'ajouter la nouvelle image
+                while (previewContainer.firstChild) {
+                    previewContainer.removeChild(previewContainer.firstChild);
+                }
+
+                // Ajoute la nouvelle image à la modal
+                previewContainer.appendChild(previewImage);
+            };
+
+            // Lit le fichier en tant que Data URL
+            reader.readAsDataURL(file);
+        }
+    }
 });
-
-
 
 
