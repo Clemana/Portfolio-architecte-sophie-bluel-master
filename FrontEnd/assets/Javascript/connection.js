@@ -1,12 +1,14 @@
 async function checkUserConnected() {
+    console.log('checkUserConnected');
     const authToken = localStorage.getItem('authToken');
     const userConnected = authToken !== null && authToken !== undefined && authToken !== '';
 
     const loginLink = document.querySelector(".login-link");
     const navEdition = document.getElementById('navEdition');
-    const buttonModify = document.querySelector("#openModalBtn");
-    const filtersSection = document.querySelector(".filters-container");
-
+    const buttonModify = document.getElementById("openModalBtn");
+    const filtersSection = document.getElementById("filters-container");
+    console.log(filtersSection)
+    
     if (userConnected) {
         loginLink.textContent = "logout";
         loginLink.addEventListener("click", userLogOut);

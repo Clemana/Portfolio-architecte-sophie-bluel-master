@@ -317,3 +317,25 @@ footer nav ul {
 	font-size: 14px;
 	font-weight: 400;
 }
+
+
+.thumbnail {
+    max-width: 100px; 
+    max-height: 100px; 
+    margin: 5px; 
+}
+
+
+.modal-gallery {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+	margin: 10%;
+}
+
+
+.modal-gallery > div {
+    flex-basis: calc(20% - 10px); 
+}
+
+
