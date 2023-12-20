@@ -86,9 +86,14 @@ document.addEventListener('DOMContentLoaded', async function () {
 
         deleteButton.addEventListener('click', async () => {
             if (confirm("Voulez-vous supprimer le projet ?")) {
-                await deleteProject(workId);
-                const updatedWorks = await fetchWorksFromApi();
-                updateModalContent(updatedWorks);
+                const monToken = localStorage.getItem("authToken");
+                if (monToken) {
+                    await deleteProject(workId, monToken);
+                    const updatedWorks = await fetchWorksFromApi();
+                    updateModalContent(updatedWorks);
+                } else {
+                    alert("Utilisateur non connecté. Veuillez vous connecter.");
+                }
             }
         });
 
@@ -106,15 +111,13 @@ document.addEventListener('DOMContentLoaded', async function () {
         return response.json();
     }
 
-    async function deleteProject(id) {
-        const monToken = localStorage.getItem("token");
-
+    async function deleteProject(id, token) {
         try {
             const response = await fetch(`http://localhost:5678/api/works/${id}`, {
                 method: 'DELETE',
                 headers: {
                     'accept': '*/*',
-                    'Authorization': `Bearer ${monToken}`,
+                    'Authorization': `Bearer ${token}`,
                 }
             });
 
@@ -192,5 +195,6 @@ document.addEventListener('DOMContentLoaded', async function () {
         }
     }
 });
+
 
 
