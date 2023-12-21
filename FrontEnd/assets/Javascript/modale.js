@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', async function () {
+    
     const openModalBtn = document.getElementById('openModalBtn');
     const closeModalBtn = document.getElementById('closeModalBtn');
     const closeModalTwoBtn = document.getElementById('closeModalTwoBtn');
@@ -9,30 +10,35 @@ document.addEventListener('DOMContentLoaded', async function () {
     const addPhotoBtn = document.querySelector('.modal-content .modal-addPhoto');
     const returnModalOne = document.querySelector('.modal-two .return-modal-one');
     const addPhotoInput = document.getElementById('addPhoto');
-    const photoCategoriesSelect = document.getElementById('photoCategories');
+    
 
-    // Récupération des catégories depuis l'API
-    fetch("http://localhost:5678/api/categories")
-        .then(response => response.json())
-        .then(dataCategories => {
-            // On récupère le select pour ajouter les catégories
-            const select = document.getElementById("photoCategories");
+    try {
+        // Récupération des catégories depuis l'API
+        const response = await fetch("http://localhost:5678/api/categories");
+        const dataCategories = await response.json();
 
-            // Catégorie vide pour le visuel
-            const emptyOption = document.createElement('option');
-            select.appendChild(emptyOption);
+        
+        const select = document.getElementById("photoCategories");
 
-            // Récupération dynamique des catégories présentes sur API
-            dataCategories.forEach((category) => {
-                const option = document.createElement('option');
-                option.innerText = category.name;
-                option.value = category.id;
-                select.appendChild(option);
-            });
+        // Catégorie vide pour le visuel
+        const emptyOption = document.createElement('option');
+        select.appendChild(emptyOption);
+
+        
+        dataCategories.forEach((category) => {
+            const option = document.createElement('option');
+            option.innerText = category.name;
+            option.value = category.id;
+            select.appendChild(option);
         });
+
+    } catch (error) {
+        console.error('Error fetching categories:', error);
+    }
 
     openModalBtn.addEventListener('click', async function () {
         try {
+            
             const works = await fetchWorksFromApi();
             updateModalContent(works);
             showModal();
@@ -48,6 +54,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     returnModalOne.addEventListener('click', showModalContent);
     addPhotoInput.addEventListener('change', handlePhotoChange);
 
+    
     function updateModalContent(works) {
         modalGallery.innerHTML = '';
 
@@ -57,6 +64,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         });
     }
 
+    
     function createWorkElement(work) {
         const workElement = document.createElement('div');
         workElement.classList.add('work-item');
@@ -79,6 +87,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         return workElement;
     }
 
+    
     function createDeleteButton(workId) {
         const deleteButton = document.createElement('button');
         deleteButton.classList.add('delete-button');
@@ -100,6 +109,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         return deleteButton;
     }
 
+    
     async function fetchWorksFromApi() {
         const response = await fetch('http://localhost:5678/api/works', {
             method: 'GET',
@@ -121,26 +131,39 @@ document.addEventListener('DOMContentLoaded', async function () {
                 }
             });
 
-            if (!response.ok) {
+    
+            if (response.ok) {
+                
+                const deletedElement = document.querySelector(`.work-item[data-id="${id}"]`);
+                if (deletedElement) {
+                    deletedElement.remove();
+                } else {
+                    console.warn(`Element with data-id=${id} not found in DOM.`);
+                }
+            } else {
                 alert("Echec de la suppression du projet...");
             }
         } catch (error) {
             console.log("Une erreur est survenue", error);
         }
     }
+    
 
+    
     function showModal() {
         modalContent.style.display = 'block';
         modalTwo.style.display = 'none';
         modal.style.display = 'block';
     }
 
+    
     function hideModal() {
         modalContent.style.display = 'block';
         modalTwo.style.display = 'none';
         modal.style.display = 'none';
     }
 
+    
     function closeOnOverlayClick(event) {
         if (event.target === modal) {
             showModalContent();
@@ -148,26 +171,31 @@ document.addEventListener('DOMContentLoaded', async function () {
         }
     }
 
+    
     function switchToModalTwo() {
         hideModalContent();
         showSecondModal();
     }
 
+    
     function hideModalContent() {
         modalContent.style.display = 'none';
         modalTwo.style.display = 'block';
     }
 
+    
     function showModalContent() {
         modalContent.style.display = 'block';
         modalTwo.style.display = 'none';
     }
 
+    
     function showSecondModal() {
         modalContent.style.display = 'none';
         modalTwo.style.display = 'block';
     }
 
+    
     function handlePhotoChange() {
         const previewContainer = document.querySelector('.modal-two-imgcontainer');
         const previewImage = document.createElement('img');
@@ -181,16 +209,16 @@ document.addEventListener('DOMContentLoaded', async function () {
                 previewImage.src = e.target.result;
                 previewImage.alt = file.name;
 
-                // Efface le contenu existant avant d'ajouter la nouvelle image
+              
                 while (previewContainer.firstChild) {
                     previewContainer.removeChild(previewContainer.firstChild);
                 }
 
-                // Ajoute la nouvelle image à la modal
+                
                 previewContainer.appendChild(previewImage);
             };
 
-            // Lit le fichier en tant que Data URL
+           
             reader.readAsDataURL(file);
         }
     }

@@ -300,6 +300,7 @@ footer nav ul {
     padding: 20px;
     background-color: #fff;
     text-align: center;
+	border-radius: 10px;
 }
 
 .close {
@@ -474,7 +475,7 @@ footer nav ul {
 /* Ajouter ces styles CSS à votre fichier */
 .modal-two-imgcontainer {
     position: relative;
-    width: 100%;
+    
     max-width: 300px; /* Ajustez la largeur maximale selon vos besoins */
     margin: auto;
     overflow: hidden;
