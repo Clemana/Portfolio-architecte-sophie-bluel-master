@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     const addPhotoBtn = document.querySelector('.modal-content .modal-addPhoto');
     const returnModalOne = document.querySelector('.modal-two .return-modal-one');
     const addPhotoInput = document.getElementById('addPhoto');
+    const formElement = document.getElementById('modal-two-form');
     
 
     try {
@@ -68,6 +69,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     function createWorkElement(work) {
         const workElement = document.createElement('div');
         workElement.classList.add('work-item');
+        workElement.setAttribute('data-id', work.id);
 
         const thumbnailContainer = document.createElement('div');
         thumbnailContainer.classList.add('thumbnail-container');
@@ -222,6 +224,81 @@ document.addEventListener('DOMContentLoaded', async function () {
             reader.readAsDataURL(file);
         }
     }
+
+    
+
+    formElement.addEventListener('submit', validationFormModal);
+    
+
+    async function validationFormModal(event) {
+        event.preventDefault()
+        try {
+            // Sélection des infos pour soumettre le formulaire
+            const inputImageUrl = addPhotoInput.files[0];
+            const titleProject = document.getElementById("photoTitle").value;
+            const categoryProject = document.getElementById("photoCategories").value;
+
+           
+    
+            // Création du formulaire de soumission du projet
+            const formData = new FormData();
+            formData.append("image", inputImageUrl);
+            formData.append("title", titleProject);
+            formData.append("category", categoryProject);
+    
+            
+            console.log("Données du formulaire :", {
+                image: inputImageUrl,
+                title: titleProject,
+                category: categoryProject,
+            });
+    
+            const myToken = localStorage.getItem("authToken");
+    
+            if (!myToken) {
+                console.error("Token d'authentification manquant. Veuillez vous connecter.");
+                return;
+            }
+    
+            
+            console.log("Token d'authentification :", myToken);
+    
+            const response = await fetch("http://localhost:5678/api/works", {
+                method: "POST",
+                headers: {
+                    'Authorization': `Bearer ${myToken}`,
+                },
+                body: formData,
+            });
+    
+            if (!response.ok) {
+                throw new Error(`Erreur lors de l'ajout du projet. Statut : ${response.status}`);
+            }
+    
+            // Conversion de la réponse en JSON
+            const data = await response.json();
+    
+            
+            console.log("Projet ajouté avec succès :", data);
+    
+            
+            modalGallery.innerHTML = '';
+    
+            
+            const updatedWorks = await fetchWorksFromApi();
+            console.log("Travaux mis à jour :", updatedWorks);
+    
+            updateModalContent(updatedWorks);
+            hideModal();
+        } catch (error) {
+            // Gérer les erreurs
+            console.error("Erreur lors de l'ajout du projet :", error);
+        }
+    }
+    
+    
+ 
+    
 });
 
 
