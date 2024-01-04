@@ -139,6 +139,7 @@ document.addEventListener('DOMContentLoaded', async function () {
                 const deletedElement = document.querySelector(`.work-item[data-id="${id}"]`);
                 if (deletedElement) {
                     deletedElement.remove();
+                   
                 } else {
                     console.warn(`Element with data-id=${id} not found in DOM.`);
                 }
@@ -277,18 +278,15 @@ document.addEventListener('DOMContentLoaded', async function () {
     
             // Conversion de la réponse en JSON
             const data = await response.json();
-    
-            
+            const newWorkElement = createWorkElement(data);
+            modalGallery.appendChild(newWorkElement);
             console.log("Projet ajouté avec succès :", data);
-    
-            
-            modalGallery.innerHTML = '';
-    
-            
+
             const updatedWorks = await fetchWorksFromApi();
-            console.log("Travaux mis à jour :", updatedWorks);
-    
             updateModalContent(updatedWorks);
+    
+            
+   
             hideModal();
         } catch (error) {
             // Gérer les erreurs
@@ -296,8 +294,25 @@ document.addEventListener('DOMContentLoaded', async function () {
         }
     }
     
+    const modalTwoValidateButton = document.getElementById('validateProject');
+
+    formElement.addEventListener('input', validateModalTwoForm);
+    addPhotoInput.addEventListener('change', validateModalTwoForm);
     
- 
+    function validateModalTwoForm() {
+        const inputImageUrl = addPhotoInput.files[0];
+    
+        
+        const isFormValid = inputImageUrl !== undefined && inputImageUrl !== null;
+    
+        modalTwoValidateButton.disabled = !isFormValid;
+
+      
+    }
+    
+    
+
+    validateModalTwoForm();
     
 });
 

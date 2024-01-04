@@ -1,3 +1,4 @@
+
 async function checkUserConnected() {
     console.log('checkUserConnected');
     const authToken = localStorage.getItem('authToken');

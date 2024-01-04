@@ -502,3 +502,24 @@ footer nav ul {
 .modal-two-form input[type="submit"].active {
 	background: #1D6154;
 }
+
+#navEdition {
+	align-items: center;
+	background: black;
+	gap: 21px;
+	height: 59px;
+	justify-content: center;
+}
+
+.modEdition {
+	color: white;
+	display: flex;
+	padding: 20px;
+	justify-content: center;
+}
+
+.modEdition .fa-regular {
+	margin-right: 16px;
+}
+
+
