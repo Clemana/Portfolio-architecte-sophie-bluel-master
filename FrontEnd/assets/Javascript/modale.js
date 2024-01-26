@@ -60,56 +60,93 @@ document.addEventListener('DOMContentLoaded', async function () {
         modalGallery.innerHTML = '';
 
         works.forEach(work => {
-            const workElement = createWorkElement(work);
+            const workElement = createWorkElement(work, true);
             modalGallery.appendChild(workElement);
         });
     }
 
+    function updateMainGallery(works) {
+        const mainGallery = document.querySelector('.gallery');
     
-    function createWorkElement(work) {
+        mainGallery.innerHTML = '';
+    
+        works.forEach(work => {
+            const workElement = createWorkElement(work, false);
+            mainGallery.appendChild(workElement);
+        });
+    }
+    
+
+    
+    function createWorkElement(work, isInModal) {
         const workElement = document.createElement('div');
         workElement.classList.add('work-item');
         workElement.setAttribute('data-id', work.id);
-
+    
         const thumbnailContainer = document.createElement('div');
         thumbnailContainer.classList.add('thumbnail-container');
-
+    
         const thumbnail = document.createElement('img');
         thumbnail.classList.add('thumbnail');
         thumbnail.src = work.imageUrl;
         thumbnail.alt = work.title;
-
-        const deleteButton = createDeleteButton(work.id);
-
+    
         thumbnailContainer.appendChild(thumbnail);
-        thumbnailContainer.appendChild(deleteButton);
-
+    
+        // Ajoutez le bouton de suppression uniquement s'il est dans la modale
+        if (isInModal) {
+            const deleteButton = createDeleteButton(work.id);
+            thumbnailContainer.appendChild(deleteButton);
+        }
+    
         workElement.appendChild(thumbnailContainer);
-
+    
+        // Ajoutez le titre uniquement s'il n'est pas dans la modale
+        if (!isInModal) {
+            const caption = document.createElement('figcaption');
+            caption.innerText = work.title;
+            workElement.appendChild(caption);
+        }
+    
         return workElement;
     }
+    
+    
+    
 
     
     function createDeleteButton(workId) {
         const deleteButton = document.createElement('button');
         deleteButton.classList.add('delete-button');
         deleteButton.innerHTML = '<i class="fa-solid fa-trash-can"></i>';
-
+    
         deleteButton.addEventListener('click', async () => {
             if (confirm("Voulez-vous supprimer le projet ?")) {
                 const monToken = localStorage.getItem("authToken");
                 if (monToken) {
-                    await deleteProject(workId, monToken);
-                    const updatedWorks = await fetchWorksFromApi();
-                    updateModalContent(updatedWorks);
+                    try {
+                        
+                        await deleteProject(workId, monToken);
+    
+                        
+                        const updatedMainGalleryWorks = await fetchWorksFromApi();
+                        updateMainGallery(updatedMainGalleryWorks);
+    
+                        
+                        const updatedModalWorks = await fetchWorksFromApi();
+                        updateModalContent(updatedModalWorks);
+                    } catch (error) {
+                        console.error('Erreur lors de la suppression du projet :', error);
+                    }
                 } else {
                     alert("Utilisateur non connecté. Veuillez vous connecter.");
                 }
             }
         });
-
+    
         return deleteButton;
     }
+    
 
     
     async function fetchWorksFromApi() {
@@ -122,6 +159,10 @@ document.addEventListener('DOMContentLoaded', async function () {
 
         return response.json();
     }
+
+    
+
+   
 
     async function deleteProject(id, token) {
         try {
@@ -139,9 +180,9 @@ document.addEventListener('DOMContentLoaded', async function () {
                 const deletedElement = document.querySelector(`.work-item[data-id="${id}"]`);
                 if (deletedElement) {
                     deletedElement.remove();
-                   
+                    
                 } else {
-                    console.warn(`Element with data-id=${id} not found in DOM.`);
+                    console.warn(`Element with data-id=${id} not found in modal gallery.`);
                 }
             } else {
                 alert("Echec de la suppression du projet...");
@@ -157,6 +198,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         modalContent.style.display = 'block';
         modalTwo.style.display = 'none';
         modal.style.display = 'block';
+        modal.classList.add('modal');
     }
 
     
@@ -227,9 +269,20 @@ document.addEventListener('DOMContentLoaded', async function () {
     }
 
     
-
+    
     formElement.addEventListener('submit', validationFormModal);
     
+    async function fetchDataAndUpdateDOM() {
+        try {
+            const updatedWorks = await fetchWorksFromApi();
+            console.log("Mise à jour du DOM avec les nouveaux projets :", updatedWorks);
+    
+            // Mise à jour du DOM avec les nouveaux projets
+            updateMainGallery(updatedWorks);
+        } catch (error) {
+            console.error("Erreur lors de la mise à jour du DOM :", error);
+        }
+    }
 
     async function validationFormModal(event) {
         event.preventDefault()
@@ -239,7 +292,10 @@ document.addEventListener('DOMContentLoaded', async function () {
             const titleProject = document.getElementById("photoTitle").value;
             const categoryProject = document.getElementById("photoCategories").value;
 
-           
+            if (!inputImageUrl || !titleProject || !categoryProject) {
+                alert("Merci de remplir tous les champs");
+                return;
+            }
     
             // Création du formulaire de soumission du projet
             const formData = new FormData();
@@ -272,27 +328,39 @@ document.addEventListener('DOMContentLoaded', async function () {
                 body: formData,
             });
     
-            if (!response.ok) {
-                throw new Error(`Erreur lors de l'ajout du projet. Statut : ${response.status}`);
-            }
-    
-            // Conversion de la réponse en JSON
-            const data = await response.json();
-            const newWorkElement = createWorkElement(data);
-            modalGallery.appendChild(newWorkElement);
-            console.log("Projet ajouté avec succès :", data);
+            if (response.ok) {
+                // Si la réponse est réussie (code 200-299), procédez comme prévu
+                const data = await response.json();
+                const newWorkElement = createWorkElement(data);
+                modalGallery.appendChild(newWorkElement);
+                console.log("Projet ajouté avec succès :", data);
+                
+                await fetchDataAndUpdateDOM();
 
-            const updatedWorks = await fetchWorksFromApi();
-            updateModalContent(updatedWorks);
-    
-            
-   
-            hideModal();
+                formElement.reset();
+
+                addPhotoInput.value = '';
+                
+                hideModal();
+            } else if (response.status === 400) {
+                alert("Erreur : Données du formulaire incorrectes");
+            } else if (response.status === 401) {
+                alert("Erreur : Non autorisé. Veuillez vous connecter.");
+                window.location.href = "login.html";
+            } else if (response.status === 500) {
+                alert("Erreur serveur");
+            } else {
+                alert(`Erreur inattendue. Code de statut : ${response.status}`);
+            }
         } catch (error) {
             // Gérer les erreurs
             console.error("Erreur lors de l'ajout du projet :", error);
         }
+        
+
     }
+
+    
     
     const modalTwoValidateButton = document.getElementById('validateProject');
 
@@ -301,18 +369,35 @@ document.addEventListener('DOMContentLoaded', async function () {
     
     function validateModalTwoForm() {
         const inputImageUrl = addPhotoInput.files[0];
+        const titleProject = document.getElementById("photoTitle").value;
+        const categoryProject = document.getElementById("photoCategories").value;
     
-        
-        const isFormValid = inputImageUrl !== undefined && inputImageUrl !== null;
+        // Variable pour stocker le message d'erreur
+        let errorMessage = "";
     
+        // Vérifier si tous les champs sont remplis
+        const isFormValid = formElement.checkValidity() && !!inputImageUrl && !!titleProject && !!categoryProject;
+    
+        // Mise à jour du message d'erreur
+        if (!isFormValid) {
+            errorMessage = "Merci de remplir tous les champs";
+        }
+    
+        // Affichage du message d'erreur
+        const errorMessageElement = document.getElementById("error-message");
+        errorMessageElement.innerHTML = errorMessage;
+    
+        // Mise à jour du style du bouton en fonction de la validité du formulaire
+        modalTwoValidateButton.style.backgroundColor = isFormValid ? '#1D6154' : '#A7A7A7';
         modalTwoValidateButton.disabled = !isFormValid;
-
-      
+        modalTwoValidateButton.style.cursor = isFormValid ? 'pointer' : 'not-allowed';
     }
     
     
-
+    
     validateModalTwoForm();
+    
+    
     
 });
 
