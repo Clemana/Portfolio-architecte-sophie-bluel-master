@@ -24,18 +24,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
             const authResponse = await response.json();
 
-            // Stocker uniquement le jeton d'authentification dans localStorage
             localStorage.setItem("authToken", authResponse.token);
-
-            // Redirection vers la page d'accueil
+ 
             window.location.replace("index.html");
         } catch (error) {
             console.error(error);
-
-            // En cas d'erreur, effacer le jeton d'authentification
+            
             localStorage.removeItem("authToken");
 
-            // Affichage du message d'erreur sur l'écran
             errorNotification.innerText = "Nom d'utilisateur ou mot de passe incorrect";
         }
     });

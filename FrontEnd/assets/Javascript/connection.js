@@ -1,6 +1,6 @@
 
 async function checkUserConnected() {
-    console.log('checkUserConnected');
+    
     const authToken = localStorage.getItem('authToken');
     const userConnected = authToken !== null && authToken !== undefined && authToken !== '';
 
@@ -8,7 +8,7 @@ async function checkUserConnected() {
     const navEdition = document.getElementById('navEdition');
     const buttonModify = document.getElementById("openModalBtn");
     const filtersSection = document.getElementById("filters-container");
-    console.log(filtersSection)
+    
     
     if (userConnected) {
         loginLink.textContent = "logout";

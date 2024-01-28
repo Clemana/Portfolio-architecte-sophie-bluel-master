@@ -409,6 +409,7 @@ footer nav ul {
 }
 
 .modal-two-imgcontainer {
+	align-items: center;
 	background-color: #E8F1F6;
     display: flex;
 	flex-direction: column;
@@ -473,12 +474,8 @@ footer nav ul {
 	height: 51px;
 }
 
-/* Ajouter ces styles CSS à votre fichier */
+
 .modal-two-imgcontainer {
-    position: relative;
-    
-    max-width: 300px; /* Ajustez la largeur maximale selon vos besoins */
-    margin: auto;
     overflow: hidden;
 }
 

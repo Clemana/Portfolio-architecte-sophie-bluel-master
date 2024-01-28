@@ -51,8 +51,6 @@ document.addEventListener('DOMContentLoaded', () => {
   
 
   function displayCategories(categories) {
-      console.log('displayCategories');
-
       const portfolioSection = document.getElementById('portfolio');
 
       const filtersContainer = document.createElement('div');

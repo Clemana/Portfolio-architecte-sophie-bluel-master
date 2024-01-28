@@ -37,6 +37,9 @@ document.addEventListener('DOMContentLoaded', async function () {
         console.error('Error fetching categories:', error);
     }
 
+  
+
+ 
     openModalBtn.addEventListener('click', async function () {
         try {
             
@@ -93,7 +96,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     
         thumbnailContainer.appendChild(thumbnail);
     
-        // Ajoutez le bouton de suppression uniquement s'il est dans la modale
+        
         if (isInModal) {
             const deleteButton = createDeleteButton(work.id);
             thumbnailContainer.appendChild(deleteButton);
@@ -101,7 +104,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     
         workElement.appendChild(thumbnailContainer);
     
-        // Ajoutez le titre uniquement s'il n'est pas dans la modale
+        
         if (!isInModal) {
             const caption = document.createElement('figcaption');
             caption.innerText = work.title;
@@ -110,10 +113,6 @@ document.addEventListener('DOMContentLoaded', async function () {
     
         return workElement;
     }
-    
-    
-    
-
     
     function createDeleteButton(workId) {
         const deleteButton = document.createElement('button');
@@ -147,8 +146,6 @@ document.addEventListener('DOMContentLoaded', async function () {
         return deleteButton;
     }
     
-
-    
     async function fetchWorksFromApi() {
         const response = await fetch('http://localhost:5678/api/works', {
             method: 'GET',
@@ -159,10 +156,6 @@ document.addEventListener('DOMContentLoaded', async function () {
 
         return response.json();
     }
-
-    
-
-   
 
     async function deleteProject(id, token) {
         try {
@@ -188,11 +181,9 @@ document.addEventListener('DOMContentLoaded', async function () {
                 alert("Echec de la suppression du projet...");
             }
         } catch (error) {
-            console.log("Une erreur est survenue", error);
+            
         }
     }
-    
-
     
     function showModal() {
         modalContent.style.display = 'block';
@@ -240,7 +231,6 @@ document.addEventListener('DOMContentLoaded', async function () {
         modalTwo.style.display = 'block';
     }
 
-    
     function handlePhotoChange() {
         const previewContainer = document.querySelector('.modal-two-imgcontainer');
         const previewImage = document.createElement('img');
@@ -268,14 +258,12 @@ document.addEventListener('DOMContentLoaded', async function () {
         }
     }
 
-    
-    
     formElement.addEventListener('submit', validationFormModal);
     
     async function fetchDataAndUpdateDOM() {
         try {
             const updatedWorks = await fetchWorksFromApi();
-            console.log("Mise à jour du DOM avec les nouveaux projets :", updatedWorks);
+            
     
             // Mise à jour du DOM avec les nouveaux projets
             updateMainGallery(updatedWorks);
@@ -303,13 +291,6 @@ document.addEventListener('DOMContentLoaded', async function () {
             formData.append("title", titleProject);
             formData.append("category", categoryProject);
     
-            
-            console.log("Données du formulaire :", {
-                image: inputImageUrl,
-                title: titleProject,
-                category: categoryProject,
-            });
-    
             const myToken = localStorage.getItem("authToken");
     
             if (!myToken) {
@@ -317,8 +298,6 @@ document.addEventListener('DOMContentLoaded', async function () {
                 return;
             }
     
-            
-            console.log("Token d'authentification :", myToken);
     
             const response = await fetch("http://localhost:5678/api/works", {
                 method: "POST",
@@ -329,11 +308,10 @@ document.addEventListener('DOMContentLoaded', async function () {
             });
     
             if (response.ok) {
-                // Si la réponse est réussie (code 200-299), procédez comme prévu
+               
                 const data = await response.json();
                 const newWorkElement = createWorkElement(data);
                 modalGallery.appendChild(newWorkElement);
-                console.log("Projet ajouté avec succès :", data);
                 
                 await fetchDataAndUpdateDOM();
 
@@ -342,6 +320,7 @@ document.addEventListener('DOMContentLoaded', async function () {
                 addPhotoInput.value = '';
                 
                 hideModal();
+                
             } else if (response.status === 400) {
                 alert("Erreur : Données du formulaire incorrectes");
             } else if (response.status === 401) {
@@ -357,11 +336,8 @@ document.addEventListener('DOMContentLoaded', async function () {
             console.error("Erreur lors de l'ajout du projet :", error);
         }
         
-
     }
 
-    
-    
     const modalTwoValidateButton = document.getElementById('validateProject');
 
     formElement.addEventListener('input', validateModalTwoForm);
@@ -393,11 +369,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         modalTwoValidateButton.style.cursor = isFormValid ? 'pointer' : 'not-allowed';
     }
     
-    
-    
     validateModalTwoForm();
-    
-    
     
 });
 
