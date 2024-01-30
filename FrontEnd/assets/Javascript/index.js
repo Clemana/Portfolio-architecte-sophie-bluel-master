@@ -1,53 +1,51 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const gallery = document.querySelector('.gallery');
-  let allWorks = [];
+    const galleryContainer = document.getElementById('gallery-container');
+    let allWorks = [];
   
-  async function fetchData() {
+    async function fetchData() {
       try {
-          const [worksResponse, categoriesResponse] = await Promise.all([
-              fetch('http://localhost:5678/api/works'),
-              fetch('http://localhost:5678/api/categories')
-          ]);
-
-          if (!worksResponse.ok || !categoriesResponse.ok) {
-              throw new Error('Erreur HTTP dans au moins l\'une des requêtes');
-          }
-
-          const [worksData, categoriesData] = await Promise.all([
-              worksResponse.json(),
-              categoriesResponse.json()
-          ]);
-
-          allWorks = worksData;
-          integrerProjets(allWorks, gallery);
-          displayCategories(categoriesData);
-          
+        const [worksResponse, categoriesResponse] = await Promise.all([
+          fetch('http://localhost:5678/api/works'),
+          fetch('http://localhost:5678/api/categories')
+        ]);
+  
+        if (!worksResponse.ok || !categoriesResponse.ok) {
+          throw new Error('Erreur HTTP dans au moins l\'une des requêtes');
+        }
+  
+        const [worksData, categoriesData] = await Promise.all([
+          worksResponse.json(),
+          categoriesResponse.json()
+        ]);
+  
+        allWorks = worksData;
+        integrerProjets(allWorks, galleryContainer);
+        displayCategories(categoriesData);
+  
       } catch (error) {
-          console.error('Erreur lors de la récupération des données:', error);
+        console.error('Erreur lors de la récupération des données:', error);
       }
-  }
-
-  function integrerProjets(projets, gallery) {
+    }
+  
+    function integrerProjets(projets, gallery) {
       gallery.innerHTML = '';
-
+  
       projets.forEach(projet => {
-          const figure = document.createElement('figure');
-          const img = document.createElement('img');
-          const figcaption = document.createElement('figcaption');
-
-          img.src = projet.imageUrl;
-          img.alt = projet.title;
-
-          figcaption.textContent = projet.title;
-
-          figure.appendChild(img);
-          figure.appendChild(figcaption);
-
-          gallery.appendChild(figure);
+        const projectContainer = document.createElement('div');
+  
+        const img = document.createElement('img');
+        img.src = projet.imageUrl;
+        img.alt = projet.title;
+  
+        const title = document.createElement('p');
+        title.textContent = projet.title;
+  
+        projectContainer.appendChild(img);
+        projectContainer.appendChild(title);
+  
+        gallery.appendChild(projectContainer);
       });
-
-      
-  }
+    }
   
 
   function displayCategories(categories) {
@@ -78,6 +76,8 @@ document.addEventListener('DOMContentLoaded', () => {
       
 
       portfolioSection.querySelector('h2').insertAdjacentElement('afterend', filtersContainer);
+
+      checkUserConnected();
   }
   
   function filterWorksByCategory(categoryId) {
